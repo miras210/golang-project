@@ -19,7 +19,7 @@ package game
 */
 
 type Game struct {
-	difficulty int
+	difficulty Difficulty
 	gameMap    [][]rune
 	characters []Character
 }
