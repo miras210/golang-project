@@ -11,6 +11,7 @@ type CharacterI interface {
 	move(direction string) bool      // move to a single cell costs 1 stamina
 	attack(character Character) bool // attack by default costs 2 stamina
 	isDead() bool
+	loot()
 	// TODO other moves like Buffs
 }
 
