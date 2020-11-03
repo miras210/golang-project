@@ -1,8 +1,9 @@
 package main
 
 import (
+	game2 "final-project/game"
 	"fmt"
-	game2 "golang-project/game"
+	"time"
 )
 
 /*
@@ -21,6 +22,7 @@ func main() {
 	fmt.Scanln(&difficulty)
 	game.Init(difficulty)
 	for game.IsRunning() {
-
+		game.Display()
+		time.Sleep(1000 * time.Millisecond)
 	}
 }

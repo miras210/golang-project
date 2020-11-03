@@ -1,5 +1,9 @@
 package game
 
+import (
+	"fmt"
+)
+
 /*
 
 	##########
@@ -25,6 +29,24 @@ type Game struct {
 	characters []Character
 }
 
+func (g *Game) Display() {
+	//TODO clear the previous screen
+
+	x, y := g.player.getLocation()
+	g.gameMap[x][y] = g.player.skin
+	for _, enemy := range g.characters {
+		x, y := enemy.getLocation()
+		g.gameMap[x][y] = enemy.skin
+	}
+
+	for _, row := range g.gameMap {
+		for _, cell := range row {
+			fmt.Print(string(cell))
+		}
+		fmt.Println()
+	}
+}
+
 func (g *Game) IsRunning() bool {
 	return true
 	//TODO check if game is running
@@ -48,8 +70,8 @@ func (g *Game) Init(difficulty string) {
 	for i := 0; i < numberOfEnemies; i++ {
 		g.characters = append(g.characters, Character{
 			skin:        'E',
-			x:           9, // TODO: random spawn method for enemies
-			y:           9,
+			x:           8, // TODO: random spawn method for enemies
+			y:           8,
 			stamina:     3,
 			health:      5,
 			power:       1,
