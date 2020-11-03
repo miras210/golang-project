@@ -2,6 +2,9 @@ package game
 
 import (
 	"fmt"
+	"os"
+	"os/exec"
+	"runtime"
 )
 
 /*
@@ -32,6 +35,26 @@ type Game struct {
 func (g *Game) Display() {
 	//TODO clear the previous screen
 
+	// WORKS ONLY IN TERMINALS BASH / CMD / .exe file
+	// Clearing the console
+	clear := make(map[string]func()) //Initialize it
+	clear["linux"] = func() {
+		cmd := exec.Command("clear") //Linux example, its tested
+		cmd.Stdout = os.Stdout
+		cmd.Run()
+	}
+	clear["windows"] = func() {
+		cmd := exec.Command("cmd", "/c", "cls") //Windows example, its tested
+		cmd.Stdout = os.Stdout
+		cmd.Run()
+	}
+
+	value, ok := clear[runtime.GOOS]
+
+	if ok {
+		value()
+	}
+
 	x, y := g.player.getLocation()
 	g.gameMap[x][y] = g.player.skin
 	for _, enemy := range g.characters {
@@ -45,6 +68,11 @@ func (g *Game) Display() {
 		}
 		fmt.Println()
 	}
+
+	// JUST FOR FUN TEST
+	g.gameMap[g.player.x][g.player.y] = '*'
+	g.player.x += 1
+
 }
 
 func (g *Game) IsRunning() bool {
