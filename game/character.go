@@ -19,18 +19,12 @@ type CharacterI interface {
 
 type Character struct {
 	skin        rune
-	x           int // x coordinate
-	y           int // y coordinate
-	prevX       int
-	prevY       int
+	x           int     // x coordinate
+	y           int     // y coordinate
 	stamina     int     // TODO ? num of cells he can move in a turn
 	health      float64 // num of health
 	power       float64 // num of damage that he can produce
 	attackRange float64 // attack range as a radius
-}
-
-func (c *Character) getPreviousLocation() (int, int) {
-	return c.prevX, c.prevY
 }
 
 func (c *Character) Move() bool {
@@ -47,23 +41,15 @@ func (c *Character) Move() bool {
 	}
 	for {
 		if key == keyboard.KeyArrowLeft {
-			c.prevX = c.x
-			c.prevY = c.y
 			c.y -= 1
 			break
 		} else if key == keyboard.KeyArrowRight {
-			c.prevX = c.x
-			c.prevY = c.y
 			c.y += 1
 			break
 		} else if key == keyboard.KeyArrowUp {
-			c.prevY = c.y
-			c.prevX = c.x
 			c.x -= 1
 			break
 		} else if key == keyboard.KeyArrowDown {
-			c.prevY = c.y
-			c.prevX = c.x
 			c.x += 1
 			break
 		}

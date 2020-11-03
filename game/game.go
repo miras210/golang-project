@@ -56,17 +56,26 @@ func (g *Game) Display() {
 	}
 
 	x, y := g.Player.getLocation()
-	prevX, prevY := g.Player.getPreviousLocation()
-	g.gameMap[prevX][prevY] = '*'
-	g.gameMap[x][y] = g.Player.skin
-	for _, enemy := range g.characters {
+	enemyLocation := make([][]int, g.difficulty.getNumberOfEnemies())
+	for i, enemy := range g.characters {
 		x, y := enemy.getLocation()
-		g.gameMap[x][y] = enemy.skin
+		enemyLocation[i] = make([]int, 2)
+		enemyLocation[i][0] = x
+		enemyLocation[i][1] = y
 	}
 
-	for _, row := range g.gameMap {
-		for _, cell := range row {
-			fmt.Print(string(cell))
+	for a, row := range g.gameMap {
+		for b, cell := range row {
+			for i, enemy := range enemyLocation {
+				if enemy[0] == a && enemy[1] == b {
+					fmt.Print(string(g.characters[i].skin))
+				}
+			}
+			if a == x && b == y {
+				fmt.Print(string(g.Player.skin))
+			} else {
+				fmt.Print(string(cell))
+			}
 		}
 		fmt.Println()
 	}
@@ -91,6 +100,7 @@ func (g *Game) Init(difficulty string) {
 		level = &easyLevel{}
 	}
 	level.setLevel(g)
+	g.difficulty = level
 	g.Player = level.getPlayerStats()
 	numberOfEnemies := level.getNumberOfEnemies()
 	for i := 0; i < numberOfEnemies; i++ {
