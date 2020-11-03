@@ -1,6 +1,8 @@
 package game
 
-import "math"
+import (
+	"math"
+)
 
 type CharacterI interface {
 	getLocation() (int, int)
@@ -13,6 +15,7 @@ type CharacterI interface {
 }
 
 type Character struct {
+	skin        rune
 	x           int     // x coordinate
 	y           int     // y coordinate
 	stamina     int     // TODO ? num of cells he can move in a turn
