@@ -26,7 +26,7 @@ import (
 */
 
 type Game struct {
-	player     Character
+	Player     Character
 	difficulty difficultyStrategy
 	gameMap    [][]rune
 	characters []Character
@@ -55,8 +55,10 @@ func (g *Game) Display() {
 		value()
 	}
 
-	x, y := g.player.getLocation()
-	g.gameMap[x][y] = g.player.skin
+	x, y := g.Player.getLocation()
+	prevX, prevY := g.Player.getPreviousLocation()
+	g.gameMap[prevX][prevY] = '*'
+	g.gameMap[x][y] = g.Player.skin
 	for _, enemy := range g.characters {
 		x, y := enemy.getLocation()
 		g.gameMap[x][y] = enemy.skin
@@ -68,10 +70,6 @@ func (g *Game) Display() {
 		}
 		fmt.Println()
 	}
-
-	// JUST FOR FUN TEST
-	g.gameMap[g.player.x][g.player.y] = '*'
-	g.player.x += 1
 
 }
 
@@ -93,7 +91,7 @@ func (g *Game) Init(difficulty string) {
 		level = &easyLevel{}
 	}
 	level.setLevel(g)
-	g.player = level.getPlayerStats()
+	g.Player = level.getPlayerStats()
 	numberOfEnemies := level.getNumberOfEnemies()
 	for i := 0; i < numberOfEnemies; i++ {
 		g.characters = append(g.characters, Character{

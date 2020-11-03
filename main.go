@@ -3,7 +3,6 @@ package main
 import (
 	game2 "final-project/game"
 	"fmt"
-	"time"
 )
 
 /*
@@ -23,6 +22,6 @@ func main() {
 	game.Init(difficulty)
 	for game.IsRunning() {
 		game.Display()
-		time.Sleep(1000 * time.Millisecond)
+		game.Player.Move()
 	}
 }
