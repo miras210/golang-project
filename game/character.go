@@ -1,14 +1,16 @@
 package game
 
 import (
+	"github.com/eiannone/keyboard"
 	"math"
 )
 
 type CharacterI interface {
 	getLocation() (int, int)
+	getPreviousLocation() (int, int)
 	getDamaged(character Character)
 	getDistance(character Character) float64
-	move(direction string) bool      // move to a single cell costs 1 stamina
+	Move() bool                      // move to a single cell costs 1 stamina
 	attack(character Character) bool // attack by default costs 2 stamina
 	isDead() bool
 	loot()
@@ -17,12 +19,60 @@ type CharacterI interface {
 
 type Character struct {
 	skin        rune
-	x           int     // x coordinate
-	y           int     // y coordinate
+	x           int // x coordinate
+	y           int // y coordinate
+	prevX       int
+	prevY       int
 	stamina     int     // TODO ? num of cells he can move in a turn
 	health      float64 // num of health
 	power       float64 // num of damage that he can produce
 	attackRange float64 // attack range as a radius
+}
+
+func (c *Character) getPreviousLocation() (int, int) {
+	return c.prevX, c.prevY
+}
+
+func (c *Character) Move() bool {
+	if err := keyboard.Open(); err != nil {
+		panic(err)
+	}
+	defer func() {
+		_ = keyboard.Close()
+	}()
+
+	_, key, err := keyboard.GetKey()
+	if err != nil {
+		panic(err)
+	}
+	for {
+		if key == keyboard.KeyArrowLeft {
+			c.prevX = c.x
+			c.prevY = c.y
+			c.y -= 1
+			break
+		} else if key == keyboard.KeyArrowRight {
+			c.prevX = c.x
+			c.prevY = c.y
+			c.y += 1
+			break
+		} else if key == keyboard.KeyArrowUp {
+			c.prevY = c.y
+			c.prevX = c.x
+			c.x -= 1
+			break
+		} else if key == keyboard.KeyArrowDown {
+			c.prevY = c.y
+			c.prevX = c.x
+			c.x += 1
+			break
+		}
+		if key == keyboard.KeyEsc {
+			return false
+		}
+	}
+
+	return true
 }
 
 func (c *Character) getDistance(character Character) float64 {
