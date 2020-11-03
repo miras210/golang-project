@@ -1,6 +1,8 @@
 package game
 
-import "math"
+import (
+	"math"
+)
 
 type CharacterI interface {
 	getLocation() (int, int)
