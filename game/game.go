@@ -37,9 +37,15 @@ type Game struct {
 	loot       []Loot
 }
 
-func (g *Game) Display() {
-	//TODO clear the previous screen
+func (g *Game) TurnStart() string {
+	g.Player.curStamina = g.Player.baseStamina
+	if !g.Player.move(g) {
+		return "Unable to make a move"
+	}
+	return ""
+}
 
+func (g *Game) Display(message string) {
 	// WORKS ONLY IN TERMINALS BASH / CMD / .exe file
 	// Clearing the console
 	clear := make(map[string]func()) //Initialize it
@@ -78,67 +84,8 @@ func (g *Game) Display() {
 	//TODO Miras, fix rendering here, please
 	for a, row := range g.gameMap {
 		for b, cell := range row {
-			for i, enemy := range enemyLocation {
-				if enemy[0] == a && enemy[1] == b {
-					fmt.Print(string(g.characters[i].skin))
-				}
-			}
-			for i, loot := range lootLocation {
-				if loot[0] == a && loot[1] == b {
-					fmt.Print(string(g.loot[i].skin))
-				}
-			}
-			if a == x && b == y {
-				fmt.Print(string(g.Player.skin))
-			} else {
-				fmt.Print(string(cell))
-			}
-		}
-		fmt.Println()
-	}
-}
-
-func (g *Game) TurnStart() string {
-	g.Player.curStamina = g.Player.baseStamina
-	if !g.Player.move(g) {
-		return "Unable to make a move"
-	}
-	return ""
-}
-
-func (g *Game) Display(message string) {
-	// WORKS ONLY IN TERMINALS BASH / CMD / .exe file
-	// Clearing the console
-	clear := make(map[string]func()) //Initialize it
-	clear["linux"] = func() {
-		cmd := exec.Command("clear") //Linux example, its tested
-		cmd.Stdout = os.Stdout
-		cmd.Run()
-	}
-	clear["windows"] = func() {
-		cmd := exec.Command("cmd", "/c", "cls") //Windows example, its tested
-		cmd.Stdout = os.Stdout
-		cmd.Run()
-	}
-
-	value, ok := clear[runtime.GOOS]
-
-	if ok {
-		value()
-	}
-
-	x, y := g.Player.getLocation()
-	enemyLocation := make([][]int, g.difficulty.getNumberOfEnemies())
-	for i, enemy := range g.characters {
-		x, y := enemy.getLocation()
-		enemyLocation[i] = make([]int, 2)
-		enemyLocation[i][0] = x
-		enemyLocation[i][1] = y
-	}
-
-	for a, row := range g.gameMap {
-		for b, cell := range row {
 			found := false
+			foundLoot := false
 			for i, enemy := range enemyLocation {
 				if enemy[0] == a && enemy[1] == b {
 					fmt.Print(string(g.characters[i].skin))
@@ -146,6 +93,15 @@ func (g *Game) Display(message string) {
 				}
 			}
 			if found {
+				continue
+			}
+			for i, loot := range lootLocation {
+				if loot[0] == a && loot[1] == b {
+					fmt.Print(string(g.loot[i].skin))
+					foundLoot = true
+				}
+			}
+			if foundLoot {
 				continue
 			}
 			if a == x && b == y {
@@ -212,12 +168,18 @@ func (g *Game) Init(difficulty string) {
 		})
 	}
 	g.running = true
-	numberOfLoots := level.getNumberOfLoots()
+	numberOfLoots := g.difficulty.getNumberOfLoots()
 	for i := 0; i < 1; i++ {
 		var x, y int = 0, 0
 		for g.gameMap[x][y] != '*' { //TODO also check if there is enemy in this cell
 			x = randomGen(0, len(g.gameMap))
 			y = randomGen(0, len(g.gameMap))
+			for _, loot := range g.loot {
+				if loot.x == x && loot.y == y || loot.x == playerX && loot.y == playerY {
+					x, y = 0, 0
+					break
+				}
+			}
 		}
 		g.loot = append(g.loot, Loot{
 			skin: 'S',
