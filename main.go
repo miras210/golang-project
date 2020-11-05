@@ -1,8 +1,8 @@
 package main
 
 import (
-	game2 "final-project/game"
 	"fmt"
+	game3 "golang-project/game"
 )
 
 /*
@@ -12,7 +12,7 @@ Available commands:
 - inventory heal if potions were found
 - loot current cell (random chance of getting buffs and healing potions)
 */
-var game game2.Game
+var game game3.Game
 
 func main() {
 	fmt.Println("Welcome to Dungeon Master RPG!")
