@@ -1,8 +1,8 @@
 package main
 
 import (
-	game3 "final-project/game"
 	"fmt"
+	game3 "golang-project/game"
 )
 
 /*

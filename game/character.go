@@ -13,6 +13,7 @@ type CharacterI interface {
 	move() bool                      // move to a single cell costs 1 stamina
 	attack(character Character) bool // attack by default costs 2 stamina
 	isDead() bool
+	loot()
 	// TODO other moves like Buffs
 }
 
@@ -132,4 +133,15 @@ func (c *Character) attack(character Character) bool {
 		return true
 	}
 	return false
+}
+
+func (c *Character) loot(l Loot) {
+	if l.name == "sword" {
+		s := SwordDecorator{power: 3}
+		c.power = s.power
+	}
+	if l.name == "armor" {
+		a := ArmorDecorator{armor: 2}
+		c.health += a.armor
+	}
 }
