@@ -1,7 +1,7 @@
 package game
 
 type difficultyStrategy interface {
-	setLevel(g *Game)
+	getLevel() [][]rune
 	getNumberOfEnemies() int
 	getPlayerStats() Character
 }
@@ -9,8 +9,8 @@ type difficultyStrategy interface {
 type easyLevel struct {
 }
 
-func (e *easyLevel) setLevel(g *Game) {
-	g.gameMap = [][]rune{
+func (e *easyLevel) getLevel() [][]rune {
+	return [][]rune{
 		{'#', '#', '#', '#', '#', '#', '#', '#', '#', '#'},
 		{'#', '*', '*', '*', '*', '*', '*', '*', '*', '#'},
 		{'#', '*', '*', '*', '*', '*', '*', '*', '*', '#'},
@@ -44,8 +44,8 @@ type mediumLevel struct {
 	//TODO implement mediumLevel thoroughly, i just copied easylevel
 }
 
-func (ml *mediumLevel) setLevel(g *Game) {
-	g.gameMap = [][]rune{
+func (ml *mediumLevel) getLevel() [][]rune {
+	return [][]rune{
 		{'#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'},
 		{'#', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '#'},
 		{'#', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '#'},
@@ -84,9 +84,9 @@ type hardLevel struct {
 	//TODO implement hardLevel thoroughly, i just copied easylevel
 }
 
-func (hl *hardLevel) setLevel(g *Game) {
+func (hl *hardLevel) getLevel() [][]rune {
 
-	g.gameMap = [][]rune{
+	return [][]rune{
 		{'#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'},
 		{'#', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '#'},
 		{'#', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '#'},

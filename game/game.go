@@ -2,9 +2,12 @@ package game
 
 import (
 	"fmt"
+	"math/rand"
 	"os"
 	"os/exec"
 	"runtime"
+	"sync"
+	"time"
 )
 
 /*
@@ -26,6 +29,7 @@ import (
 */
 
 type Game struct {
+	running    bool
 	Player     Character
 	difficulty difficultyStrategy
 	gameMap    [][]rune
@@ -63,7 +67,7 @@ func (g *Game) Display() {
 		enemyLocation[i][0] = x
 		enemyLocation[i][1] = y
 	}
-
+	//TODO Miras, fix rendering here, please
 	for a, row := range g.gameMap {
 		for b, cell := range row {
 			for i, enemy := range enemyLocation {
@@ -83,8 +87,16 @@ func (g *Game) Display() {
 }
 
 func (g *Game) IsRunning() bool {
-	return true
-	//TODO check if game is running
+	return g.running
+}
+
+var once sync.Once
+
+func randomGen(min, max int) int {
+	once.Do(func() {
+		rand.Seed(time.Now().Unix())
+	})
+	return rand.Intn(max-min) + min
 }
 
 func (g *Game) Init(difficulty string) {
@@ -99,19 +111,25 @@ func (g *Game) Init(difficulty string) {
 	default:
 		level = &easyLevel{}
 	}
-	level.setLevel(g)
+	g.gameMap = level.getLevel()
 	g.difficulty = level
 	g.Player = level.getPlayerStats()
 	numberOfEnemies := level.getNumberOfEnemies()
 	for i := 0; i < numberOfEnemies; i++ {
+		var x, y int = 0, 0
+		for g.gameMap[x][y] != '*' { //TODO also check if there is enemy in this cell
+			x = randomGen(0, len(g.gameMap))
+			y = randomGen(0, len(g.gameMap))
+		}
 		g.characters = append(g.characters, Character{
 			skin:        'E',
-			x:           8, // TODO: random spawn method for enemies
-			y:           8,
+			x:           x,
+			y:           y,
 			stamina:     3,
 			health:      5,
 			power:       1,
 			attackRange: 3,
 		})
 	}
+	g.running = true
 }
