@@ -2,9 +2,12 @@ package game
 
 import (
 	"fmt"
+	"math/rand"
 	"os"
 	"os/exec"
 	"runtime"
+	"sync"
+	"time"
 )
 
 /*
@@ -87,6 +90,15 @@ func (g *Game) IsRunning() bool {
 	//TODO check if game is running
 }
 
+var once sync.Once
+
+func randomGen(min, max int) int {
+	once.Do(func() {
+		rand.Seed(time.Now().Unix())
+	})
+	return rand.Intn(max-min) + min
+}
+
 func (g *Game) Init(difficulty string) {
 	var level difficultyStrategy
 	switch difficulty {
@@ -99,15 +111,20 @@ func (g *Game) Init(difficulty string) {
 	default:
 		level = &easyLevel{}
 	}
-	level.setLevel(g)
+	g.gameMap = level.getLevel()
 	g.difficulty = level
 	g.Player = level.getPlayerStats()
 	numberOfEnemies := level.getNumberOfEnemies()
 	for i := 0; i < numberOfEnemies; i++ {
+		var x, y int = 0, 0
+		for g.gameMap[x][y] != '*' { //TODO also check if there is enemy in this cell
+			x = randomGen(0, len(g.gameMap))
+			y = randomGen(0, len(g.gameMap))
+		}
 		g.characters = append(g.characters, Character{
 			skin:        'E',
-			x:           8, // TODO: random spawn method for enemies
-			y:           8,
+			x:           x,
+			y:           y,
 			stamina:     3,
 			health:      5,
 			power:       1,
