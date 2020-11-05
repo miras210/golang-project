@@ -10,7 +10,7 @@ type CharacterI interface {
 	getPreviousLocation() (int, int)
 	getDamaged(character Character)
 	getDistance(character Character) float64
-	Move() bool                      // move to a single cell costs 1 stamina
+	move() bool                      // move to a single cell costs 1 stamina
 	attack(character Character) bool // attack by default costs 2 stamina
 	isDead() bool
 	// TODO other moves like Buffs
@@ -18,15 +18,20 @@ type CharacterI interface {
 
 type Character struct {
 	skin        rune
-	x           int     // x coordinate
-	y           int     // y coordinate
-	stamina     int     // TODO ? num of cells he can move in a turn
+	x           int // x coordinate
+	y           int // y coordinate
+	baseStamina int // TODO ? num of cells he can move in a turn
+	curStamina  int
 	health      float64 // num of health
 	power       float64 // num of damage that he can produce
 	attackRange float64 // attack range as a radius
 }
 
-func (c *Character) Move() bool {
+func (c *Character) move(g *Game) bool {
+	if c.curStamina == 0 {
+		return false
+	}
+
 	if err := keyboard.Open(); err != nil {
 		panic(err)
 	}
@@ -38,26 +43,34 @@ func (c *Character) Move() bool {
 	if err != nil {
 		panic(err)
 	}
-	for {
-		if key == keyboard.KeyArrowLeft {
-			c.y -= 1
-			break
-		} else if key == keyboard.KeyArrowRight {
-			c.y += 1
-			break
-		} else if key == keyboard.KeyArrowUp {
-			c.x -= 1
-			break
-		} else if key == keyboard.KeyArrowDown {
-			c.x += 1
-			break
+	prevX, prevY := c.x, c.y
+	if key == keyboard.KeyArrowLeft {
+		c.y -= 1
+	} else if key == keyboard.KeyArrowRight {
+		c.y += 1
+	} else if key == keyboard.KeyArrowUp {
+		c.x -= 1
+	} else if key == keyboard.KeyArrowDown {
+		c.x += 1
+	}
+	if key == keyboard.KeyEsc {
+		return false
+	}
+	correctLocation := true
+	if g.gameMap[c.x][c.y] == '*' {
+		for _, character := range g.characters {
+			x, y := character.getLocation()
+			if x == c.x && y == c.y {
+				correctLocation = false
+			}
 		}
-		if key == keyboard.KeyEsc {
-			return false
+		if correctLocation {
+			c.curStamina -= 1
+			return true
 		}
 	}
-
-	return true
+	c.x, c.y = prevX, prevY
+	return false
 }
 
 /*func (c *Character) Move() bool {

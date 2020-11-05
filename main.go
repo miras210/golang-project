@@ -1,8 +1,8 @@
 package main
 
 import (
+	game3 "final-project/game"
 	"fmt"
-	game3 "golang-project/game"
 )
 
 /*
@@ -20,8 +20,8 @@ func main() {
 	var difficulty string
 	fmt.Scanln(&difficulty)
 	game.Init(difficulty)
+	game.Display("")
 	for game.IsRunning() {
-		game.Display()
-		game.Player.Move()
+		game.Display(game.TurnStart())
 	}
 }
