@@ -38,7 +38,8 @@ func (e *easyLevel) getPlayerStats() Character {
 		skin:        'P',
 		x:           1,
 		y:           1,
-		stamina:     5,
+		baseStamina: 5,
+		curStamina:  5,
 		health:      10,
 		power:       2,
 		attackRange: 3,
@@ -82,7 +83,8 @@ func (ml *mediumLevel) getPlayerStats() Character {
 		skin:        'P',
 		x:           1,
 		y:           1,
-		stamina:     5,
+		baseStamina: 5,
+		curStamina:  5,
 		health:      10,
 		power:       2,
 		attackRange: 3,
@@ -96,7 +98,6 @@ type hardLevel struct {
 func (hl *hardLevel) getNumberOfLoots() int {
 	panic("implement me")
 }
-
 func (hl *hardLevel) getLevel() [][]rune {
 
 	return [][]rune{
@@ -127,7 +128,8 @@ func (hl *hardLevel) getPlayerStats() Character {
 		skin:        'P',
 		x:           1,
 		y:           1,
-		stamina:     5,
+		baseStamina: 5,
+		curStamina:  5,
 		health:      10,
 		power:       2,
 		attackRange: 3,
