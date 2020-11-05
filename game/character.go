@@ -60,6 +60,40 @@ func (c *Character) Move() bool {
 	return true
 }
 
+/*func (c *Character) Move() bool {
+	if err := keyboard.Open(); err != nil {
+		panic(err)
+	}
+	defer func() {
+		_ = keyboard.Close()
+	}()
+
+	_, key, err := keyboard.GetKey()
+	if err != nil {
+		panic(err)
+	}
+	for {
+		if key == keyboard.KeyArrowLeft {
+			c.y -= 1
+			break
+		} else if key == keyboard.KeyArrowRight {
+			c.y += 1
+			break
+		} else if key == keyboard.KeyArrowUp {
+			c.x -= 1
+			break
+		} else if key == keyboard.KeyArrowDown {
+			c.x += 1
+			break
+		}
+		if key == keyboard.KeyEsc {
+			return false
+		}
+	}
+
+	return true
+}*/
+
 func (c *Character) getDistance(character Character) float64 {
 	return math.Sqrt(float64(c.x-character.x)*float64(c.x-character.x) + float64(c.y-character.y)*float64(c.y-character.y))
 }

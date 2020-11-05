@@ -29,6 +29,7 @@ import (
 */
 
 type Game struct {
+	running    bool
 	Player     Character
 	difficulty difficultyStrategy
 	gameMap    [][]rune
@@ -66,7 +67,7 @@ func (g *Game) Display() {
 		enemyLocation[i][0] = x
 		enemyLocation[i][1] = y
 	}
-
+	//TODO Miras, fix rendering here, please
 	for a, row := range g.gameMap {
 		for b, cell := range row {
 			for i, enemy := range enemyLocation {
@@ -86,8 +87,7 @@ func (g *Game) Display() {
 }
 
 func (g *Game) IsRunning() bool {
-	return true
-	//TODO check if game is running
+	return g.running
 }
 
 var once sync.Once
@@ -131,4 +131,5 @@ func (g *Game) Init(difficulty string) {
 			attackRange: 3,
 		})
 	}
+	g.running = true
 }
