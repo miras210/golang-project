@@ -1,25 +1,21 @@
 package game
 
-type loot struct {
+type Loot struct {
+	skin rune
 	name string
+	x    int // x coordinate
+	y    int // y coordinate
 }
 type SwordDecorator struct {
 	power float64
-	loot
+	Loot
 }
 
 type ArmorDecorator struct {
 	armor float64
-	loot
+	Loot
 }
 
-func (c *Character) loot(l loot) {
-	if l.name == "sword" {
-		s := SwordDecorator{power: 3}
-		c.power = s.power
-	}
-	if l.name == "armor" {
-		a := ArmorDecorator{armor: 2}
-		c.health += a.armor
-	}
+func (l *Loot) getLocation() (int, int) {
+	return l.x, l.y
 }

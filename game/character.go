@@ -121,3 +121,14 @@ func (c *Character) attack(character Character) bool {
 	}
 	return false
 }
+
+func (c *Character) loot(l Loot) {
+	if l.name == "sword" {
+		s := SwordDecorator{power: 3}
+		c.power = s.power
+	}
+	if l.name == "armor" {
+		a := ArmorDecorator{armor: 2}
+		c.health += a.armor
+	}
+}

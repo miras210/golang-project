@@ -4,6 +4,7 @@ type difficultyStrategy interface {
 	getLevel() [][]rune
 	getNumberOfEnemies() int
 	getPlayerStats() Character
+	getNumberOfLoots() int
 }
 
 type easyLevel struct {
@@ -28,6 +29,10 @@ func (e *easyLevel) getNumberOfEnemies() int {
 	return 3
 }
 
+func (e *easyLevel) getNumberOfLoots() int {
+	return 3
+}
+
 func (e *easyLevel) getPlayerStats() Character {
 	return Character{
 		skin:        'P',
@@ -42,6 +47,10 @@ func (e *easyLevel) getPlayerStats() Character {
 
 type mediumLevel struct {
 	//TODO implement mediumLevel thoroughly, i just copied easylevel
+}
+
+func (ml *mediumLevel) getNumberOfLoots() int {
+	panic("implement me")
 }
 
 func (ml *mediumLevel) getLevel() [][]rune {
@@ -82,6 +91,10 @@ func (ml *mediumLevel) getPlayerStats() Character {
 
 type hardLevel struct {
 	//TODO implement hardLevel thoroughly, i just copied easylevel
+}
+
+func (hl *hardLevel) getNumberOfLoots() int {
+	panic("implement me")
 }
 
 func (hl *hardLevel) getLevel() [][]rune {

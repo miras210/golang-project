@@ -34,6 +34,7 @@ type Game struct {
 	difficulty difficultyStrategy
 	gameMap    [][]rune
 	characters []Character
+	loot       []Loot
 }
 
 func (g *Game) Display() {
@@ -67,12 +68,24 @@ func (g *Game) Display() {
 		enemyLocation[i][0] = x
 		enemyLocation[i][1] = y
 	}
+	lootLocation := make([][]int, g.difficulty.getNumberOfLoots())
+	for i, loot := range g.loot {
+		x, y := loot.getLocation()
+		lootLocation[i] = make([]int, 2)
+		lootLocation[i][0] = x
+		lootLocation[i][1] = y
+	}
 	//TODO Miras, fix rendering here, please
 	for a, row := range g.gameMap {
 		for b, cell := range row {
 			for i, enemy := range enemyLocation {
 				if enemy[0] == a && enemy[1] == b {
 					fmt.Print(string(g.characters[i].skin))
+				}
+			}
+			for i, loot := range lootLocation {
+				if loot[0] == a && loot[1] == b {
+					fmt.Print(string(g.loot[i].skin))
 				}
 			}
 			if a == x && b == y {
@@ -83,7 +96,6 @@ func (g *Game) Display() {
 		}
 		fmt.Println()
 	}
-
 }
 
 func (g *Game) IsRunning() bool {
@@ -131,5 +143,33 @@ func (g *Game) Init(difficulty string) {
 			attackRange: 3,
 		})
 	}
+	numberOfLoots := level.getNumberOfLoots()
+	for i := 0; i < 1; i++ {
+		var x, y int = 0, 0
+		for g.gameMap[x][y] != '*' { //TODO also check if there is enemy in this cell
+			x = randomGen(0, len(g.gameMap))
+			y = randomGen(0, len(g.gameMap))
+		}
+		g.loot = append(g.loot, Loot{
+			skin: 'S',
+			name: "sword",
+			x:    x,
+			y:    y,
+		})
+	}
+	for i := 0; i < numberOfLoots-1; i++ {
+		var x, y int = 0, 0
+		for g.gameMap[x][y] != '*' { //TODO also check if there is enemy in this cell
+			x = randomGen(0, len(g.gameMap))
+			y = randomGen(0, len(g.gameMap))
+		}
+		g.loot = append(g.loot, Loot{
+			skin: 'A',
+			name: "armor",
+			x:    x,
+			y:    y,
+		})
+	}
+
 	g.running = true
 }
