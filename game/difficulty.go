@@ -35,7 +35,7 @@ func (e *easyLevel) getNumberOfLoots() int {
 
 func (e *easyLevel) getPlayerStats() Character {
 	return Character{
-		skin:        'P',
+		skin:        'p',
 		x:           1,
 		y:           1,
 		baseStamina: 5,

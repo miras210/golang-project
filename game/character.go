@@ -26,9 +26,18 @@ type Character struct {
 	health      float64 // num of health
 	power       float64 // num of damage that he can produce
 	attackRange float64 // attack range as a radius
+	isLooted    bool
 }
 
 func (c *Character) move(g *Game) bool {
+	armor := Loot{
+		skin: 'A',
+		name: "armor",
+	}
+	sword := Loot{
+		skin: 'S',
+		name: "sword",
+	}
 	if c.curStamina == 0 {
 		return false
 	}
@@ -64,6 +73,23 @@ func (c *Character) move(g *Game) bool {
 			if x == c.x && y == c.y {
 				correctLocation = false
 			}
+		}
+		for _, loot := range g.loot {
+			if loot.x == c.x && loot.y == c.y {
+				if loot.name == "armor" {
+					c.loot(armor)
+					c.skin = 'W'
+					g.gameMap[loot.x][loot.y] = '*'
+				}
+				if loot.name == "sword" {
+					c.loot(sword)
+					c.skin = 'T'
+					g.gameMap[loot.x][loot.y] = '*'
+				}
+				c.isLooted = true
+				g.Player.isLooted = true
+			}
+
 		}
 		if correctLocation {
 			c.curStamina -= 1

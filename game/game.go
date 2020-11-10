@@ -42,7 +42,9 @@ func (g *Game) TurnStart() string {
 	if !g.Player.move(g) {
 		return "Unable to make a move"
 	}
-	return ""
+	health := fmt.Sprintf("%f", g.Player.health)
+	power := fmt.Sprintf("%f", g.Player.power)
+	return "Health = " + health + "\n Power = " + power
 }
 
 func (g *Game) Display(message string) {
